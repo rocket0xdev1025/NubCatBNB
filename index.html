@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nub Cat ($NUBCAT) — Just A Silly Nub Trading Silly Coins!!!</title>
+  <meta name="description" content="Nub Cat ($NUBCAT) — Just A Silly Nub Trading Silly Coins!!! The cutest silly cat on Solana." />
+  <link rel="icon" href="logo.png" type="image/png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            nub: {
+              blue: '#A8D1FF',
+              sky: '#C5E2FF',
+              soft: '#E8F4FF',
+              cream: '#FFF9F0',
+              ink: '#1A1A1A',
+              pink: '#FFB4C8',
+              yellow: '#FFE566',
+            }
+          },
+          fontFamily: {
+            fredoka: ['Fredoka', 'system-ui', 'sans-serif'],
+            caveat: ['Caveat', 'cursive'],
+          },
+          boxShadow: {
+            doodle: '4px 4px 0 0 #1A1A1A',
+            'doodle-lg': '6px 6px 0 0 #1A1A1A',
+            'doodle-sm': '3px 3px 0 0 #1A1A1A',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --nub-blue: #A8D1FF;
+      --nub-ink: #1A1A1A;
+    }
+
+    * {
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24'%3E🐱%3C/text%3E%3C/svg%3E") 12 12, auto !important;
+    }
+
+    a, button, input, [role="button"] {
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24'%3E🐱%3C/text%3E%3C/svg%3E") 12 12, pointer !important;
+    }
+
+    body {
+      font-family: 'Fredoka', system-ui, sans-serif;
+      background-color: #E8F4FF;
+      color: #1A1A1A;
+      overflow-x: hidden;
+    }
+
+    /* Pen-drawn paper texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(168, 209, 255, 0.5) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(255, 180, 200, 0.25) 0%, transparent 35%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Squiggly / hand-drawn borders */
+    .pen-box {
+      border: 3.5px solid #1A1A1A;
+      border-radius: 22px 28px 20px 26px / 26px 20px 28px 22px;
+      background: #fff;
+      box-shadow: 5px 5px 0 0 #1A1A1A;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .pen-box:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 7px 7px 0 0 #1A1A1A;
+    }
+
+    .pen-btn {
+      border: 3.5px solid #1A1A1A;
+      border-radius: 999px 999px 999px 999px / 999px 999px 999px 999px;
+      box-shadow: 4px 4px 0 0 #1A1A1A;
+      font-weight: 700;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .pen-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 0 #1A1A1A;
+    }
+
+    .pen-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 0 #1A1A1A;
+    }
+
+    .pen-outline {
+      -webkit-text-stroke: 1.5px #1A1A1A;
+      paint-order: stroke fill;
+    }
+
+    /* Squiggle divider */
+    .squiggle {
+      height: 12px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12' preserveAspectRatio='none'%3E%3Cpath d='M0 6 Q10 0 20 6 T40 6 T60 6 T80 6 T100 6 T120 6' fill='none' stroke='%231A1A1A' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x center;
+      background-size: 80px 12px;
+      opacity: 0.7;
+    }
+
+    /* Floating doodles */
+    .float-doodle {
+      animation: floaty 4s ease-in-out infinite;
+    }
+
+    .float-doodle:nth-child(2) { animation-delay: 0.6s; }
+    .float-doodle:nth-child(3) { animation-delay: 1.2s; }
+    .float-doodle:nth-child(4) { animation-delay: 1.8s; }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-12px) rotate(3deg); }
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    .wiggle {
+      animation: wiggle 2.5s ease-in-out infinite;
+    }
+
+    @keyframes bounce-soft {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .bounce-soft {
+      animation: bounce-soft 3s ease-in-out infinite;
+    }
+
+    /* Paw trail */
+    .paw-print {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      font-size: 1.35rem;
+      transition: opacity 0.4s ease, transform 0.15s linear;
+      opacity: 0.85;
+      filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.15));
+      will-change: transform, opacity;
+    }
+
+    /* Step number blob */
+    .step-num {
+      width: 2.75rem;
+      height: 2.75rem;
+      border: 3px solid #1A1A1A;
+      border-radius: 50% 45% 55% 50% / 50% 55% 45% 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      box-shadow: 3px 3px 0 0 #1A1A1A;
+    }
+
+    /* Dex embed frame */
+    .dex-frame {
+      border: 3.5px solid #1A1A1A;
+      border-radius: 18px 22px 16px 20px / 20px 16px 22px 18px;
+      overflow: hidden;
+      box-shadow: 5px 5px 0 0 #1A1A1A;
+      background: #fff;
+    }
+
+    .dex-frame iframe {
+      width: 100%;
+      height: 460px;
+      border: 0;
+      display: block;
+    }
+
+    /* CA copy toast */
+    #copy-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: #FFE566;
+      border: 3px solid #1A1A1A;
+      border-radius: 999px;
+      padding: 0.6rem 1.4rem;
+      font-weight: 700;
+      box-shadow: 4px 4px 0 0 #1A1A1A;
+      z-index: 10000;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+    }
+
+    #copy-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .ca-mono {
+      font-family: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', monospace;
+      letter-spacing: -0.02em;
+    }
+
+    /* Nav scribble underline */
+    .nav-link {
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -2px;
+      height: 3px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 6'%3E%3Cpath d='M0 3 Q15 0 30 3 T60 3' fill='none' stroke='%231A1A1A' stroke-width='2'/%3E%3C/svg%3E") no-repeat center;
+      background-size: 100% 100%;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .nav-link:hover::after {
+      opacity: 1;
+    }
+
+    @media (max-width: 640px) {
+      .dex-frame iframe {
+        height: 380px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="paw-1" class="paw-print" aria-hidden="true">🐾</div>
+  <div id="paw-2" class="paw-print" aria-hidden="true">🐾</div>
+  <div id="paw-3" class="paw-print" aria-hidden="true">🐾</div>
+  <div id="copy-toast" role="status">Copied! Meow~ 🐱</div>
+
+  <div class="content">
+    <!-- Nav -->
+    <nav class="sticky top-0 z-50 bg-nub-soft/90 backdrop-blur-md border-b-[3px] border-nub-ink">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <a href="#top" class="flex items-center gap-2 group">
+          <img src="logo.png" alt="Nub Cat" class="w-11 h-11 object-contain wiggle" />
+          <span class="font-bold text-xl tracking-tight hidden sm:inline">Nub Cat</span>
+          <span class="text-xs font-semibold bg-nub-yellow px-2 py-0.5 border-2 border-nub-ink rounded-full shadow-doodle-sm">$NUBCAT</span>
+        </a>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <a href="#howto" class="nav-link hidden md:inline text-sm font-semibold">How to Buy</a>
+          <a href="#chart" class="nav-link hidden md:inline text-sm font-semibold">Chart</a>
+          <a href="https://x.com/NubCat_solX" target="_blank" rel="noopener noreferrer" class="w-10 h-10 pen-box !rounded-full !p-1.5 !shadow-doodle-sm hover:!shadow-doodle flex items-center justify-center overflow-hidden bg-white" title="X / Twitter">
+            <img src="x.png" alt="X" class="w-full h-full object-contain" />
+          </a>
+          <a href="https://pancakeswap.finance/swap?chain=bsc&inputCurrency=BNB&outputCurrency=TBA" target="_blank" rel="noopener noreferrer" class="pen-btn bg-nub-blue px-3 sm:px-5 py-2 text-sm sm:text-base">
+            Buy Now
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <header id="top" class="relative overflow-hidden">
+      <!-- Decorative floating doodles -->
+      <div class="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        <span class="float-doodle absolute top-16 left-[8%] text-3xl opacity-70">✦</span>
+        <span class="float-doodle absolute top-28 right-[12%] text-2xl text-nub-pink opacity-80">♥</span>
+        <span class="float-doodle absolute bottom-24 left-[15%] text-2xl opacity-60">🐾</span>
+        <span class="float-doodle absolute top-40 left-[45%] text-xl opacity-50">•</span>
+        <span class="float-doodle absolute bottom-32 right-[20%] text-3xl opacity-70">✦</span>
+        <span class="float-doodle absolute top-20 right-[35%] text-lg opacity-40">•</span>
+      </div>
+
+      <div class="max-w-6xl mx-auto px-4 pt-10 pb-6 sm:pt-14 sm:pb-10">
+        <div class="pen-box overflow-hidden !p-0 !rounded-[28px_32px_24px_30px/30px_24px_32px_28px] bg-nub-blue">
+          <img src="banner.png" alt="Nub Cat banner" class="w-full h-auto block" />
+        </div>
+
+        <div class="mt-8 sm:mt-10 text-center max-w-3xl mx-auto">
+          <div class="inline-flex items-center gap-3 mb-4">
+            <img src="logo.png" alt="" class="w-16 h-16 sm:w-20 sm:h-20 bounce-soft drop-shadow-md" />
+          </div>
+          <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-none mb-3">
+            Nub Cat
+          </h1>
+          <p class="font-caveat text-2xl sm:text-3xl md:text-4xl text-nub-ink/80 mb-2 leading-tight">
+            Just A Silly Nub Trading Silly Coins!!!
+          </p>
+          <p class="text-base sm:text-lg text-nub-ink/70 max-w-xl mx-auto mb-8">
+            The chunkiest little blue nub on Solana. No roadmap. No utility. Just vibes, whiskers, and silly coins.
+          </p>
+
+          <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-8">
+            <a href="https://pancakeswap.finance/swap?chain=bsc&inputCurrency=BNB&outputCurrency=TBA" target="_blank" rel="noopener noreferrer" class="pen-btn bg-nub-blue px-7 py-3.5 text-lg">
+              🛒 Buy Now
+            </a>
+            <a href="https://dexscreener.com/solana/TBA" target="_blank" rel="noopener noreferrer" class="pen-btn bg-nub-yellow px-7 py-3.5 text-lg">
+              📈 Chart
+            </a>
+          </div>
+
+          <!-- CA copy -->
+          <div class="pen-box inline-flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 px-4 py-3 max-w-full bg-nub-cream">
+            <span class="text-xs font-bold uppercase tracking-wider opacity-60 shrink-0 text-left sm:text-center">Contract</span>
+            <code id="ca-address" class="ca-mono text-xs sm:text-sm break-all text-left flex-1 select-all">TBA</code>
+            <button type="button" id="copy-ca" class="pen-btn bg-nub-pink px-4 py-2 text-sm shrink-0" aria-label="Copy contract address">
+              📋 Copy CA
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="squiggle max-w-4xl mx-auto my-4 px-4" aria-hidden="true"></div>
+
+    <!-- About / Token -->
+    <section class="max-w-6xl mx-auto px-4 py-10 sm:py-14">
+      <div class="grid md:grid-cols-2 gap-6 sm:gap-8 items-center">
+        <div class="pen-box p-6 sm:p-8 bg-white relative">
+          <span class="absolute -top-3 -right-2 text-3xl float-doodle" aria-hidden="true">✦</span>
+          <h2 class="text-3xl sm:text-4xl font-bold mb-3">Meet the Nub</h2>
+          <p class="font-caveat text-2xl text-nub-ink/70 mb-4">A silly little blob with big dreams (and tiny paws)</p>
+          <p class="text-nub-ink/80 leading-relaxed mb-4">
+            <strong>Nub Cat</strong> (<span class="font-bold">$NUBCAT</span>) is the pen-drawn meme cat trading silly coins on Solana.
+            Short arms. Soft vibes. Maximum chaos. Born to buy, born to meow.
+          </p>
+          <ul class="space-y-2 text-nub-ink/80">
+            <li class="flex items-start gap-2"><span class="text-lg leading-none">🐾</span> Fair launch chaos energy</li>
+            <li class="flex items-start gap-2"><span class="text-lg leading-none">💙</span> Sky-blue doodle aesthetic</li>
+            <li class="flex items-start gap-2"><span class="text-lg leading-none">🪙</span> Just a silly nub trading silly coins</li>
+          </ul>
+        </div>
+        <div class="pen-box p-6 sm:p-8 bg-nub-blue flex flex-col items-center justify-center text-center">
+          <img src="logo.png" alt="Nub Cat logo" class="w-40 h-40 sm:w-52 sm:h-52 object-contain mb-4 wiggle" />
+          <p class="font-caveat text-3xl sm:text-4xl font-bold">$NUBCAT</p>
+          <p class="text-sm mt-1 opacity-70">Ticker · Solana</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="squiggle max-w-4xl mx-auto my-2 px-4" aria-hidden="true"></div>
+
+    <!-- How to Buy -->
+    <section id="howto" class="max-w-6xl mx-auto px-4 py-10 sm:py-14">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl sm:text-5xl font-bold mb-2">How to Buy</h2>
+        <p class="font-caveat text-2xl sm:text-3xl text-nub-ink/70">Four easy steps to swap BNB for $NUBCAT</p>
+      </div>
+
+      <div class="pen-box max-w-xl mx-auto mb-10 px-5 sm:px-8 py-5 bg-nub-yellow flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+        <div class="flex items-center gap-3">
+          <span class="w-14 h-14 rounded-full border-[3px] border-nub-ink bg-[#F3BA2F] flex items-center justify-center shadow-doodle-sm shrink-0" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="w-8 h-8" fill="#1A1A1A" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M16.624 13.92l2.717 2.716-7.353 7.353-7.353-7.353 2.717-2.716 4.636 4.637 4.636-4.637zM9.271 11.773l2.716-2.717 2.717 2.717-2.717 2.717-2.716-2.717zM7.124 9.626L9.84 6.91 5.204 2.274 0 7.478l4.636 4.637 2.488-2.489zm11.5 0l2.488 2.489L24 7.478 18.796 2.274 14.16 6.91l2.717 2.716zM16.624 10.08L12 5.456 7.376 10.08 4.66 7.363 12 0l7.34 7.363-2.716 2.717z"/>
+            </svg>
+          </span>
+          <div class="text-left">
+            <p class="text-[11px] font-bold uppercase tracking-wider opacity-60">You pay</p>
+            <p class="text-2xl font-bold leading-none">BNB</p>
+          </div>
+        </div>
+        <span class="text-3xl font-bold leading-none rotate-90 sm:rotate-0" aria-hidden="true">→</span>
+        <div class="flex items-center gap-3">
+          <img src="logo.png" alt="" class="w-14 h-14 object-contain shrink-0" />
+          <div class="text-left">
+            <p class="text-[11px] font-bold uppercase tracking-wider opacity-60">You get</p>
+            <p class="text-2xl font-bold leading-none">$NUBCAT</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <article class="pen-box p-5 sm:p-6 bg-white flex flex-col">
+          <div class="step-num bg-nub-blue mb-4">1</div>
+          <h3 class="text-xl font-bold mb-2">Get a BNB Wallet</h3>
+          <p class="text-sm text-nub-ink/75 leading-relaxed flex-1">
+            Download <strong>MetaMask</strong> or <strong>Trust Wallet</strong>. Switch the network to <strong>BNB Smart Chain</strong>. Keep your seed phrase safe (nubs never share secrets).
+          </p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <a href="https://metamask.io/download/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold underline underline-offset-2 hover:text-nub-ink">MetaMask</a>
+            <span class="text-xs opacity-40">·</span>
+            <a href="https://trustwallet.com/download" target="_blank" rel="noopener noreferrer" class="text-xs font-bold underline underline-offset-2 hover:text-nub-ink">Trust Wallet</a>
+          </div>
+        </article>
+
+        <article class="pen-box p-5 sm:p-6 bg-nub-cream flex flex-col">
+          <div class="step-num bg-nub-yellow mb-4">2</div>
+          <h3 class="text-xl font-bold mb-2">Add Some BNB</h3>
+          <p class="text-sm text-nub-ink/75 leading-relaxed flex-1">
+            Buy <strong>BNB</strong> on Binance (or any exchange), then send it to your wallet. You’ll need BNB to swap for $NUBCAT and to pay gas.
+          </p>
+        </article>
+
+        <article class="pen-box p-5 sm:p-6 bg-white flex flex-col">
+          <div class="step-num bg-nub-pink mb-4">3</div>
+          <h3 class="text-xl font-bold mb-2">Open PancakeSwap</h3>
+          <p class="text-sm text-nub-ink/75 leading-relaxed flex-1">
+            Hit <strong>Buy Now</strong> to open PancakeSwap. Connect your wallet, paste the $NUBCAT contract, and set the pair to <strong>BNB → $NUBCAT</strong>.
+          </p>
+        </article>
+
+        <article class="pen-box p-5 sm:p-6 bg-nub-sky flex flex-col">
+          <div class="step-num bg-white mb-4">4</div>
+          <h3 class="text-xl font-bold mb-2">Swap &amp; Hold</h3>
+          <p class="text-sm text-nub-ink/75 leading-relaxed flex-1">
+            Confirm the swap, welcome your silly nubs, and join the pack on X. Double-check the CA first. Chart the vibes. Stay silly.
+          </p>
+        </article>
+      </div>
+
+      <p class="text-center text-sm text-nub-ink/55 mt-6 max-w-xl mx-auto">
+        Always verify the contract address before swapping. If the swap fails, bump slippage a little — meme coins can be spicy.
+      </p>
+
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a href="https://pancakeswap.finance/swap?chain=bsc&inputCurrency=BNB&outputCurrency=TBA" target="_blank" rel="noopener noreferrer" class="pen-btn bg-nub-blue px-6 py-3 text-base">
+          🛒 Buy $NUBCAT with BNB
+        </a>
+        <a href="https://dexscreener.com/bsc/TBA" target="_blank" rel="noopener noreferrer" class="pen-btn bg-white px-6 py-3 text-base">
+          📈 View Chart
+        </a>
+      </div>
+    </section>
+
+    <div class="squiggle max-w-4xl mx-auto my-2 px-4" aria-hidden="true"></div>
+
+    <!-- Chart / Dexscreener embed -->
+    <section id="chart" class="max-w-6xl mx-auto px-4 py-10 sm:py-14">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl sm:text-5xl font-bold mb-2">Live Chart</h2>
+        <p class="font-caveat text-2xl sm:text-3xl text-nub-ink/70">Watch the silly candles go brrr</p>
+      </div>
+      <div class="dex-frame">
+        <iframe
+          id="dex-embed"
+          title="Dexscreener chart for NUBCAT"
+          src="https://dexscreener.com/solana/TBA?embed=1&theme=light&trades=0&info=0"
+          loading="lazy"
+          allow="clipboard-write"
+        ></iframe>
+      </div>
+      <p class="text-center text-sm text-nub-ink/50 mt-4">
+        Powered by
+        <a href="https://dexscreener.com/solana/TBA" target="_blank" rel="noopener noreferrer" class="underline font-semibold text-nub-ink/70 hover:text-nub-ink">Dexscreener</a>
+      </p>
+    </section>
+
+    <!-- Community CTA -->
+    <section class="max-w-6xl mx-auto px-4 pb-14 sm:pb-20">
+      <div class="pen-box p-8 sm:p-10 bg-nub-blue text-center relative overflow-hidden">
+        <span class="absolute top-4 left-6 text-2xl opacity-60 float-doodle" aria-hidden="true">♥</span>
+        <span class="absolute bottom-4 right-8 text-2xl opacity-60 float-doodle" aria-hidden="true">✦</span>
+        <span class="absolute top-6 right-10 text-xl opacity-50 float-doodle" aria-hidden="true">🐾</span>
+        <img src="logo.png" alt="" class="w-20 h-20 mx-auto mb-4 bounce-soft" />
+        <h2 class="text-3xl sm:text-4xl font-bold mb-2">Join the Nub Pack</h2>
+        <p class="font-caveat text-2xl mb-6 text-nub-ink/80">Come be silly with us</p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="https://x.com/NubCat_solX" target="_blank" rel="noopener noreferrer" class="pen-btn bg-white px-5 py-3">
+            <img src="x.png" alt="" class="w-7 h-7 object-contain" />
+            Twitter / X
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t-[3px] border-nub-ink bg-white/70">
+      <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+        <div class="flex items-center gap-2">
+          <img src="logo.png" alt="" class="w-9 h-9 object-contain" />
+          <div>
+            <p class="font-bold">Nub Cat · $NUBCAT</p>
+            <p class="font-caveat text-lg text-nub-ink/60 leading-none">Just A Silly Nub Trading Silly Coins!!!</p>
+          </div>
+        </div>
+        <p class="text-xs text-nub-ink/50 max-w-sm">
+          $NUBCAT is a meme coin with no intrinsic value or expectation of financial return. DYOR. Not financial advice.
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const CA = 'TBA';
+      const copyBtn = document.getElementById('copy-ca');
+      const toast = document.getElementById('copy-toast');
+      const caEl = document.getElementById('ca-address');
+
+      if (caEl) caEl.textContent = CA;
+
+      async function copyCA() {
+        try {
+          await navigator.clipboard.writeText(CA);
+        } catch {
+          const range = document.createRange();
+          range.selectNodeContents(caEl);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          document.execCommand('copy');
+          sel.removeAllRanges();
+        }
+        toast.classList.add('show');
+        clearTimeout(copyCA._t);
+        copyCA._t = setTimeout(() => toast.classList.remove('show'), 1800);
+      }
+
+      copyBtn.addEventListener('click', copyCA);
+
+      // Three paw prints follow the cursor with lag
+      const paws = [
+        document.getElementById('paw-1'),
+        document.getElementById('paw-2'),
+        document.getElementById('paw-3'),
+      ];
+
+      const positions = paws.map(() => ({ x: -100, y: -100 }));
+      let mouseX = -100;
+      let mouseY = -100;
+      let lastAngle = 0;
+
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      }, { passive: true });
+
+      const lags = [0.18, 0.10, 0.055];
+      const offsets = [
+        { x: -6, y: 18 },
+        { x: 10, y: 36 },
+        { x: -4, y: 54 },
+      ];
+
+      function animatePaws() {
+        let tx = mouseX;
+        let ty = mouseY;
+
+        for (let i = 0; i < paws.length; i++) {
+          const p = positions[i];
+          const lag = lags[i];
+          const off = offsets[i];
+          p.x += (tx + off.x - p.x) * lag;
+          p.y += (ty + off.y - p.y) * lag;
+
+          const dx = (i === 0 ? mouseX : positions[i - 1].x) - p.x;
+          const dy = (i === 0 ? mouseY : positions[i - 1].y) - p.y;
+          const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+          lastAngle = angle;
+
+          const el = paws[i];
+          el.style.transform = `translate(${p.x - 12}px, ${p.y - 12}px) rotate(${angle}deg) scale(${1 - i * 0.12})`;
+          el.style.opacity = String(0.9 - i * 0.18);
+
+          tx = p.x;
+          ty = p.y;
+        }
+        requestAnimationFrame(animatePaws);
+      }
+      animatePaws();
+    })();
+  </script>
+</body>
+</html>
